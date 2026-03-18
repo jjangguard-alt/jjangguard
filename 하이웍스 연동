@@ -1,0 +1,16 @@
+// Node.js (Express) 등 백엔드 환경에서의 토큰 발급 예시
+const axios = require('axios');
+
+async function getHiworksToken() {
+  const tokenUrl = 'https://api.hiworks.com/open/auth/accesstoken';
+  
+  const response = await axios.post(tokenUrl, null, {
+    params: {
+      client_id: '발급받은_CLIENT_ID',
+      client_secret: '발급받은_CLIENT_SECRET',
+      grant_type: 'client_credentials' // 또는 authorization_code
+    }
+  });
+  
+  return response.data.data.access_token;
+}
