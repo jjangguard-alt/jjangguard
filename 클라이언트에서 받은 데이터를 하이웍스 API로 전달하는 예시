@@ -1,0 +1,26 @@
+// 클라이언트에서 받은 데이터를 하이웍스 API로 전달하는 예시
+app.post('/api/send-to-hiworks', async (req, res) => {
+  const { title, content } = req.body;
+  const accessToken = await getHiworksToken(); // 2단계에서 만든 함수
+  
+  // 하이웍스 게시판 API 엔드포인트 (예시 URL이므로 공식 문서 참조 필요)
+  const hiworksApiUrl = 'https://api.hiworks.com/board/v2/posts'; 
+  
+  try {
+    const result = await axios.post(hiworksApiUrl, {
+      board_id: '운행일지_게시판_ID', // 등록할 하이웍스 게시판 ID
+      title: title,
+      contents: content
+    }, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    res.status(200).json({ message: "성공적으로 등록되었습니다." });
+  } catch (error) {
+    console.error('API 연동 에러:', error);
+    res.status(500).json({ error: "하이웍스 연동 실패" });
+  }
+});
